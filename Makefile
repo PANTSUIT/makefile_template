@@ -37,26 +37,22 @@ all: before_build app after_build
 
 before_build: 
 	@echo " **************** ${@} ****************"
-	@echo "${C_SOURCES}"
-	# @if [ ! -d ${BUILD_PATH} ]; then \
-	#   mkdir ${BUILD_PATH}; \
-	#   fi
+	echo ${RM}
 
 after_build: 
 	@echo " **************** ${@} ****************"
 
 app: ${TARGET_NAMES}
 
-${TARGET_NAMES}: ${@}
+${TARGET_NAMES}: %: %.o
 	@echo " **************** ${@} ****************"
-	@echo " **************** ${^} ****************"
-	${CC} -o $@ $(addsuffix .o, ${@}) ${C_FLAGS}
+	${CC} -o $@ $^ ${C_FLAGS}
 
 %.o: %.c
 	${CC} -c -o $@ $^ ${C_FLAGS}
 
 clean:
-	rm ${TARGET_NAMES}
-	rm ${C_OBJECTS}
-	# rm -rf ${BUILD_PATH}
+	${RM} ${TARGET_NAMES}
+	${RM} *.o
+	${RM} ${C_OBJECTS}
 
