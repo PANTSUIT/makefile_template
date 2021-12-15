@@ -25,26 +25,28 @@ INCLUDE_PATHS +=
 
 C_LIBS += -L. \
 					
-COM_FLAGS = -Wall -g -O2 -fPIC
-
-C_FLAGS = ${COM_FLAGS} ${INCLUDE_PATHS} ${C_LIBS} -std=gnu11
+C_FLAGS =  -Wall -O2 -fPIC -std=gnu11 ${COM_FLAGS} ${INCLUDE_PATHS} ${C_LIBS} 
 
 CPP_FLAGS = ${COM_FLAGS} -std=gnu++11
 
-.PHONY: all before_build after_build app clean ${TARGET_NAMES}
 
-all: before_build app after_build 
+.PHONY: all before_build after_build debug release clean ${TARGET_NAMES}
+
+all: before_build debug after_build 
 
 before_build: 
 	@echo " **************** ${@} ****************"
-	echo ${RM}
 
 after_build: 
 	@echo " **************** ${@} ****************"
 
-app: ${TARGET_NAMES}
+debug: C_FLAGS+=-g
 
-${TARGET_NAMES}: %: %.o
+debug: ${TARGET_NAMES} 
+
+release: ${TARGET_NAMES}
+
+${TARGET_NAMES}: %: %.o ${C_OBJECTS}
 	@echo " **************** ${@} ****************"
 	${CC} -o $@ $^ ${C_FLAGS}
 
