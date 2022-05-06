@@ -4,13 +4,14 @@ TARGET_NAMES = main hello
 # PROJECT
 PROJECT_CURRENT_PATH = ${PWD}
 
-CC = gcc
-
 # compiler
-#
-# CC = arm-linux-gnueabihf-gcc
-# CPP = arm-linux-gnueabihf-g++
-# AR = arm-linux-gnueabihf-ar
+ifeq(${ARHC},arm)
+CC = arm-linux-gnueabihf-gcc
+CPP = arm-linux-gnueabihf-g++
+AR = arm-linux-gnueabihf-ar
+else 
+CC = gcc
+endif
 
 COM_FLAGS = -Wall -O2 -g
 C_FLAGS   = $(COM_FLAGS) -std=c11
