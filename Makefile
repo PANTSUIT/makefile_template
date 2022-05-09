@@ -5,7 +5,7 @@ TARGET_NAMES = main hello
 PROJECT_CURRENT_PATH = ${PWD}
 
 # compiler
-ifeq(${ARHC},arm)
+ifeq (${ARHC},arm)
 CC = arm-linux-gnueabihf-gcc
 CPP = arm-linux-gnueabihf-g++
 AR = arm-linux-gnueabihf-ar
@@ -25,20 +25,20 @@ C_OBJECTS = $(patsubst %.c, %.o, ${C_SOURCES})
 
 C_LIBS += -L. \
 					
-
 .PHONY: all before_build after_build debug release clean ${TARGET_NAMES}
 
 all: before_build debug after_build 
 
 before_build: 
-	@echo " **************** ${@} ****************"
+	@echo "====> ${@}"
 	@echo C_INCLUDES: ${C_INCLUDES}
 	@echo C_SOURCES: ${C_SOURCES}
 	@echo C_OBJECTS: ${C_OBJECTS}
 	@echo C_LIBS: ${C_LIBS}
 
 after_build: 
-	@echo " **************** ${@} ****************"
+	@echo ""
+	@echo "====> ${@}"
 
 # debug: C_FLAGS+=-g
 debug: ${TARGET_NAMES}
@@ -46,11 +46,12 @@ debug: ${TARGET_NAMES}
 release: ${TARGET_NAMES}
 
 ${TARGET_NAMES}: %: %.o ${C_OBJECTS}
-	@echo " **************** ${@} ****************"
-	${CC} -o $@ $^ ${C_FLAGS}
+	@echo ""
+	@echo "====> ${@} "
+	${CC} -o $@ $^ ${C_FLAGS} ${C_INCLUDES}
 
 %.o: %.c
-	${CC} -c -o $@ $^ ${C_FLAGS}
+	${CC} -c -o $@ $^ ${C_FLAGS} ${C_INCLUDES}
 
 clean:
 	${RM} ${TARGET_NAMES}
