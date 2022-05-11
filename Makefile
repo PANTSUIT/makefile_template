@@ -48,10 +48,10 @@ release: ${TARGET_NAMES}
 ${TARGET_NAMES}: %: %.o ${C_OBJECTS}
 	@echo ""
 	@echo "====> ${@} "
-	${CC} -o $@ $^ ${C_FLAGS} ${C_INCLUDES}
+	${CC} -o $@ $^ ${C_FLAGS} ${C_INCLUDES} ${C_LIBS}
 
 %.o: %.c
-	${CC} -c -o $@ $^ ${C_FLAGS} ${C_INCLUDES}
+	${CC} -c -o $@ $^ ${C_FLAGS} ${C_INCLUDES} ${C_LIBS}
 
 clean:
 	${RM} ${TARGET_NAMES}
