@@ -1,8 +1,8 @@
 
-TARGET_NAMES = main hello
 
 # PROJECT
-PROJECT_CURRENT_PATH = ${PWD}
+PROJECT_ROOT_PATH = ${PWD}
+TARGET_NAMES = main hello
 
 # compiler
 ifeq (${ARHC},arm)
@@ -17,24 +17,26 @@ COM_FLAGS = -Wall -O2 -g
 C_FLAGS   = $(COM_FLAGS) -std=c11
 CPP_FLAGS = $(COM_FLAGS) -std=c++11
 
-C_INCLUDES = 
+# includes
 
-C_SOURCES = 
+C_SRCS += 
 
-C_OBJECTS = $(patsubst %.c, %.o, ${C_SOURCES})
+C_OBJS = $(patsubst %.c, %.o, ${C_SRCS})
 
 C_LIBS += -L. \
-					
+
+C_FLAGS += ${C_LIBS} 
+
 .PHONY: all before_build after_build debug release clean ${TARGET_NAMES}
 
 all: before_build debug after_build 
 
 before_build: 
 	@echo "====> ${@}"
-	@echo C_INCLUDES: ${C_INCLUDES}
-	@echo C_SOURCES: ${C_SOURCES}
-	@echo C_OBJECTS: ${C_OBJECTS}
+	@echo C_SRCS: ${C_SRCS}
+	@echo C_OBJS: ${C_OBJS}
 	@echo C_LIBS: ${C_LIBS}
+	@echo VPATH: ${VPATH}
 
 after_build: 
 	@echo ""
@@ -45,16 +47,16 @@ debug: ${TARGET_NAMES}
 
 release: ${TARGET_NAMES}
 
-${TARGET_NAMES}: %: %.o ${C_OBJECTS}
+${TARGET_NAMES}: %: %.o ${C_OBJS}
 	@echo ""
 	@echo "====> ${@} "
-	${CC} -o $@ $^ ${C_FLAGS} ${C_INCLUDES} ${C_LIBS}
+	${CC} ${C_FLAGS} -o $@ $<  
 
 %.o: %.c
-	${CC} -c -o $@ $^ ${C_FLAGS} ${C_INCLUDES} ${C_LIBS}
+	${CC} ${C_FLAGS} -c -o $@ $< 
 
 clean:
 	${RM} ${TARGET_NAMES}
 	${RM} *.o
-	${RM} ${C_OBJECTS}
+	${RM} ${C_OBJS}
 
